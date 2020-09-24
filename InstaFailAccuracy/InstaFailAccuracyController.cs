@@ -82,6 +82,7 @@ namespace InstaFailAccuracy
 
         private void OnMenuSceneLoaded()
         {
+            //Debug.LogWarning("Menu scene loaded!");
             if (CurrentGameStatus != GameStatus.Unknown && InstaFailAccuracyGameplaySetup.instance.EnableInstaFailAcc)
                 _rankCounter.relativeScoreOrImmediateRankDidChangeEvent -= OnRelativeScoreOrImmediateRankDidChangeEvent;
             CurrentGameStatus = GameStatus.Menu;
@@ -89,6 +90,9 @@ namespace InstaFailAccuracy
 
         private void OnGameSceneLoaded()
         {
+            //Logger.log.Debug("Game scene loaded!");
+            //Logger.log.Debug($"Does InstaFailAccuracy is enabled?: {InstaFailAccuracyGameplaySetup.instance.EnableInstaFailAcc}");
+            //Logger.log.Debug($"Current threshold: {InstaFailAccuracyGameplaySetup.instance.FailThresholdValue}");
             if (InstaFailAccuracyGameplaySetup.instance.EnableInstaFailAcc)
             {
                 _alreadyFailed = false;
@@ -104,12 +108,19 @@ namespace InstaFailAccuracy
         private void OnRelativeScoreOrImmediateRankDidChangeEvent()
         {
             var currentAcc = _rankCounter?.relativeScore * 100;
+            //Logger.log.Debug($"!_alreadyFailed: {!_alreadyFailed}");
+            //Logger.log.Debug($"_rankCounter is not null?: {_rankCounter != null}");
+            //Logger.log.Debug($"currentAcc: {currentAcc}");
+            //Logger.log.Debug($"InstaFailAccuracyGameplaySetup.instance.FailThresholdValue: {InstaFailAccuracyGameplaySetup.instance.FailThresholdValue}");
+            //Logger.log.Debug($"_standardLevelFailedController is not null?: {_standardLevelFailedController != null}");
             if (!_alreadyFailed && _rankCounter != null &&
-                currentAcc * 100 < InstaFailAccuracyGameplaySetup.instance.FailThresholdValue)
+                currentAcc < InstaFailAccuracyGameplaySetup.instance.FailThresholdValue)
             {
                 Logger.log.Debug($"Current accuracy: {currentAcc}");
+                _alreadyFailed = true;
                 _standardLevelFailedController.HandleLevelFailed();
             }
+            //Logger.log.Debug("--------------");
         }
 
         #endregion

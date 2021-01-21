@@ -1,68 +1,51 @@
-﻿using System.Linq;
-
-using BS_Utils.Utilities;
-
+﻿using System;
 using InstaFailAccuracy.Configuration;
+using Zenject;
 
-using UnityEngine;
+namespace InstaFailAccuracy
+{
+	internal class InstaFailAccuracyGameController : IInitializable, IDisposable
+	{
+		private readonly PluginConfig _config;
+		private readonly ILevelEndActions _levelEndActions;
+		private readonly ScoreController _scoreController;
+		private readonly StandardLevelFailedController _standardLevelFailedController;
 
+		private bool _failed;
 
-namespace InstaFailAccuracy {
-    public class InstaFailAccuracyController : MonoBehaviour {
-        public enum GameStatus {
-            Unknown,
-            Menu,
-            Game
-        }
+		public InstaFailAccuracyGameController(PluginConfig config, ILevelEndActions levelEndActions, ScoreController scoreController, StandardLevelFailedController standardLevelFailedController)
+		{
+			_config = config;
+			_levelEndActions = levelEndActions;
+			_scoreController = scoreController;
+			_standardLevelFailedController = standardLevelFailedController;
+		}
 
-        public GameStatus CurrentGameStatus { get; private set; } = GameStatus.Unknown;
-        private RelativeScoreAndImmediateRankCounter _rankCounter;
-        private StandardLevelFailedController _standardLevelFailedController;
-        private bool _alreadyFailed;
+		public void Initialize()
+		{
+			_levelEndActions.levelFailedEvent += OnLevelFailed;
+			_scoreController.immediateMaxPossibleScoreDidChangeEvent += HandleScoreControllerImmediateMaxPossibleScoreDidChange;
+		}
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Called by Unity")]
-        private void Awake() {
-            DontDestroyOnLoad(this);
-        }
+		public void Dispose()
+		{
+			_scoreController.immediateMaxPossibleScoreDidChangeEvent -= HandleScoreControllerImmediateMaxPossibleScoreDidChange;
+			_levelEndActions.levelFailedEvent -= OnLevelFailed;
+		}
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Called by Unity")]
-        private void OnEnable() {
-            BSEvents.menuSceneLoaded += OnMenuSceneLoaded;
-            BSEvents.gameSceneLoaded += OnGameSceneLoaded;
-        }
+		private void OnLevelFailed()
+		{
+			_failed = true;
+		}
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Called by Unity")]
-        private void OnDisable() {
-            BSEvents.menuSceneLoaded -= OnMenuSceneLoaded;
-            BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
-        }
-
-        private void OnMenuSceneLoaded() {
-            if (CurrentGameStatus != GameStatus.Unknown && PluginConfig.Instance.EnableInstaFailAcc) {
-                _rankCounter.relativeScoreOrImmediateRankDidChangeEvent -= OnRelativeScoreOrImmediateRankDidChangeEvent;
-            }
-
-            CurrentGameStatus = GameStatus.Menu;
-        }
-
-        private void OnGameSceneLoaded() {
-            if (PluginConfig.Instance.EnableInstaFailAcc) {
-                _alreadyFailed = false;
-                _rankCounter = Resources.FindObjectsOfTypeAll<RelativeScoreAndImmediateRankCounter>().First();
-                _standardLevelFailedController = Resources.FindObjectsOfTypeAll<StandardLevelFailedController>().First();
-                _rankCounter.relativeScoreOrImmediateRankDidChangeEvent += OnRelativeScoreOrImmediateRankDidChangeEvent;
-            }
-
-            CurrentGameStatus = GameStatus.Game;
-        }
-
-        private void OnRelativeScoreOrImmediateRankDidChangeEvent() {
-            float? currentAcc = _rankCounter?.relativeScore * 100;
-            if (!_alreadyFailed && _rankCounter != null &&
-                currentAcc < PluginConfig.Instance.FailThresholdValue) {
-                _alreadyFailed = true;
-                _standardLevelFailedController.HandleLevelFailed();
-            }
-        }
-    }
+		private void HandleScoreControllerImmediateMaxPossibleScoreDidChange(int immediateMaxPossibleScore, int _)
+		{
+			var accuracy = _scoreController.prevFrameRawScore * 100f / immediateMaxPossibleScore;
+			if (!_failed && accuracy < _config.FailThresholdValue)
+			{
+				_failed = true;
+				_standardLevelFailedController.HandleLevelFailed();
+			}
+		}
+	}
 }

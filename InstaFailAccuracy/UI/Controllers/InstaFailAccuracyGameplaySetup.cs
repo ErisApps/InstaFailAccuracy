@@ -1,27 +1,32 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
-
 using InstaFailAccuracy.Configuration;
 
+namespace InstaFailAccuracy.UI.Controllers
+{
+	internal class InstaFailAccuracyGameplaySetup
+	{
+		private readonly PluginConfig _config;
 
-namespace InstaFailAccuracy.UI.Controllers {
+		public InstaFailAccuracyGameplaySetup(PluginConfig config)
+		{
+			_config = config;
+		}
 
+		[UIValue("enable-instafailacc")]
+		public bool EnableInstaFailAcc
+		{
+			get => _config.EnableInstaFailAcc;
+			set => _config.EnableInstaFailAcc = value;
+		}
 
-    internal class InstaFailAccuracyGameplaySetup {
-        [UIValue("enable-instafailacc")]
-        public bool EnableInstaFailAcc {
-            get => PluginConfig.Instance.EnableInstaFailAcc;
-            set => PluginConfig.Instance.EnableInstaFailAcc = value;
-        }
+		[UIValue("fail-threshold-value")]
+		public float FailThresholdValue
+		{
+			get => _config.FailThresholdValue;
+			set => _config.FailThresholdValue = value;
+		}
 
-        [UIValue("fail-threshold-value")]
-        public float FailThresholdValue {
-            get => PluginConfig.Instance.FailThresholdValue;
-            set => PluginConfig.Instance.FailThresholdValue = value;
-        }
-
-        [UIAction("fail-threshold-formatter")]
-        public string InstaFailFormatter(float nb) {
-            return $"{nb:F1}%";
-        }
-    }
+		[UIAction("fail-threshold-formatter")]
+		public string InstaFailFormatter(float nb) => $"{nb:F1}%";
+	}
 }

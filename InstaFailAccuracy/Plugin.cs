@@ -2,9 +2,8 @@
 using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
+using IPA.Logging;
 using SiraUtil.Zenject;
-using UnityEngine;
-using Logger = IPA.Logging.Logger;
 
 namespace InstaFailAccuracy
 {
@@ -18,12 +17,12 @@ namespace InstaFailAccuracy
 
 			zenject.OnApp<InstaAppInstaller>().WithParameters(logger, Configuration.PluginConfig.Instance);
 			zenject.OnMenu<InstaMenuInstaller>();
+			zenject.OnGame<InstaGameInstaller>().OnlyForStandard();
 		}
 
 		[OnStart]
 		public void OnApplicationStart()
 		{
-			new GameObject("InstaFailAccuracyController").AddComponent<InstaFailAccuracyController>();
 		}
 
 		[OnExit]

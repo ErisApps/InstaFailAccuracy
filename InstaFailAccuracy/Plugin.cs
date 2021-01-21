@@ -13,9 +13,7 @@ namespace InstaFailAccuracy
 		[Init]
 		public void Init(Logger logger, Config config, Zenjector zenject)
 		{
-			Configuration.PluginConfig.Instance = config.Generated<Configuration.PluginConfig>();
-
-			zenject.OnApp<InstaAppInstaller>().WithParameters(logger, Configuration.PluginConfig.Instance);
+			zenject.OnApp<InstaAppInstaller>().WithParameters(logger, config.Generated<Configuration.PluginConfig>());
 			zenject.OnMenu<InstaMenuInstaller>();
 			zenject.OnGame<InstaGameInstaller>().OnlyForStandard();
 		}

@@ -15,7 +15,9 @@ namespace InstaFailAccuracy
 		{
 			zenject.OnApp<InstaAppInstaller>().WithParameters(logger, config.Generated<Configuration.PluginConfig>());
 			zenject.OnMenu<InstaMenuInstaller>();
-			zenject.OnGame<InstaGameInstaller>().OnlyForStandard();
+			zenject.OnGame<InstaGameInstaller>()
+				.Expose<StandardLevelFailedController>()
+				.OnlyForStandard();
 		}
 
 		[OnEnable, OnDisable]

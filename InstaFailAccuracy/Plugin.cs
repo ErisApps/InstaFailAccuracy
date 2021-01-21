@@ -20,7 +20,7 @@ namespace InstaFailAccuracy
 			Logger = logger;
 			Configuration.PluginConfig.Instance = config.Generated<Configuration.PluginConfig>();
 
-			zenject.OnMenu<OnMenuInstaller>();
+			zenject.OnMenu<InstaMenuInstaller>();
 		}
 
 		[OnStart]

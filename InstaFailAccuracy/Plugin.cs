@@ -7,7 +7,7 @@ using SiraUtil.Zenject;
 
 namespace InstaFailAccuracy
 {
-	[Plugin(RuntimeOptions.SingleStartInit)]
+	[Plugin(RuntimeOptions.DynamicInit)]
 	public class Plugin
 	{
 		[Init]
@@ -18,14 +18,10 @@ namespace InstaFailAccuracy
 			zenject.OnGame<InstaGameInstaller>().OnlyForStandard();
 		}
 
-		[OnStart]
-		public void OnApplicationStart()
+		[OnEnable, OnDisable]
+		public void OnStateChanged()
 		{
-		}
-
-		[OnExit]
-		public void OnApplicationQuit()
-		{
+			// Zenject is poggers
 		}
 	}
 }

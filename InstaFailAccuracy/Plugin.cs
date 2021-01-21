@@ -1,45 +1,37 @@
 ﻿using InstaFailAccuracy.Installers;
-
 using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
-
 using SiraUtil.Zenject;
-
 using UnityEngine;
-
 using IPALogger = IPA.Logging.Logger;
 
 
-namespace InstaFailAccuracy {
+namespace InstaFailAccuracy
+{
+	[Plugin(RuntimeOptions.SingleStartInit)]
+	public class Plugin
+	{
+		internal static IPALogger Logger { get; private set; }
 
-    [Plugin(RuntimeOptions.SingleStartInit)]
-    public class Plugin {
-        internal static IPALogger Logger { get; private set; }
+		[Init]
+		public void Init(IPALogger logger, Config config, Zenjector zenject)
+		{
+			Logger = logger;
+			Configuration.PluginConfig.Instance = config.Generated<Configuration.PluginConfig>();
 
-        [Init]
-        public void Init(IPALogger logger) {
-            Logger = logger;
-        }
+			zenject.OnMenu<OnMenuInstaller>();
+		}
 
-        [Init]
-        public void InitWithConfig(Config conf) {
-            Configuration.PluginConfig.Instance = conf.Generated<Configuration.PluginConfig>();
-        }
+		[OnStart]
+		public void OnApplicationStart()
+		{
+			new GameObject("InstaFailAccuracyController").AddComponent<InstaFailAccuracyController>();
+		}
 
-        [Init]
-        public void InitWithZenjector(Zenjector zenjector) {
-            zenjector.OnMenu<OnMenuInstaller>();
-        }
-
-        [OnStart]
-        public void OnApplicationStart() {
-            new GameObject("InstaFailAccuracyController").AddComponent<InstaFailAccuracyController>();
-        }
-
-        [OnExit]
-        public void OnApplicationQuit() {
-            
-        }
-    }
+		[OnExit]
+		public void OnApplicationQuit()
+		{
+		}
+	}
 }

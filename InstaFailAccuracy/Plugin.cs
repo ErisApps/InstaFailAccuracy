@@ -4,22 +4,19 @@ using IPA.Config;
 using IPA.Config.Stores;
 using SiraUtil.Zenject;
 using UnityEngine;
-using IPALogger = IPA.Logging.Logger;
-
+using Logger = IPA.Logging.Logger;
 
 namespace InstaFailAccuracy
 {
 	[Plugin(RuntimeOptions.SingleStartInit)]
 	public class Plugin
 	{
-		internal static IPALogger Logger { get; private set; }
-
 		[Init]
-		public void Init(IPALogger logger, Config config, Zenjector zenject)
+		public void Init(Logger logger, Config config, Zenjector zenject)
 		{
-			Logger = logger;
 			Configuration.PluginConfig.Instance = config.Generated<Configuration.PluginConfig>();
 
+			zenject.OnApp<InstaAppInstaller>().WithParameters(logger, Configuration.PluginConfig.Instance);
 			zenject.OnMenu<InstaMenuInstaller>();
 		}
 

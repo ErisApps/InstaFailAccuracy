@@ -16,7 +16,7 @@ namespace InstaFailAccuracy.UI
 
 		public void Initialize()
 		{
-			GameplaySetup.instance.AddTab("InstaFail Accuracy", "InstaFailAccuracy.UI.Views.InstaFailAccuracyGameplaySetupView.bsml", _host);
+			GameplaySetup.instance.AddTab("InstaFail Accuracy", "InstaFailAccuracy.UI.Views.InstaFailAccuracyGameplaySetupView.bsml", _host, MenuType.Solo);
 		}
 
 		public void Dispose()

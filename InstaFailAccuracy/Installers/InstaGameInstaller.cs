@@ -16,7 +16,7 @@ namespace InstaFailAccuracy.Installers
 		{
 			if (_config.EnableInstaFailAcc)
 			{
-				Container.Bind<InstaFailAccuracyGameController>().AsSingle().NonLazy();
+				Container.BindInterfacesTo<InstaFailAccuracyGameController>().AsSingle().NonLazy();
 			}
 		}
 	}

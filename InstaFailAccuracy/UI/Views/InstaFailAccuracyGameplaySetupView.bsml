@@ -2,7 +2,7 @@
   <horizontal horizontal-fit='PreferredSize'>
     <modifier-container pref-width='65'>
       <modifier source='#GameNoteIcon' text='Enable' value='enable-instafailacc' apply-on-change='true' hover-hint='Makes you fail below the percentage value specified'/>
-      <increment-setting text='Fail Threshold' font-size='4' value='fail-threshold-value' min='0' max='99.5' increment='0.5' apply-on-change='true' formatter='fail-threshold-formatter'/>
+      <slider-setting text='Fail Threshold' font-size='4' value='fail-threshold-value' min='0' max='99.5' increment='0.5' apply-on-change='true' formatter='fail-threshold-formatter' integer-only='false'/>
     </modifier-container>
   </horizontal>
 </bg>

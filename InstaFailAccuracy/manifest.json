@@ -3,7 +3,7 @@
   "id": "InstaFailAccuracy",
   "name": "InstaFailAccuracy",
   "author": "Shoko84",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Makes you fail if you're under a specific accuracy!",
   "gameVersion": "1.13.2",
   "dependsOn": {

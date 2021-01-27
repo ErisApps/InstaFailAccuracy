@@ -18,7 +18,7 @@ namespace InstaFailAccuracy.Installers
 		{
 			if (_config.EnableInstaFailAcc && !_gameplayCoreSceneSetupData.gameplayModifiers.noFailOn0Energy)
 			{
-				Container.BindInterfacesTo<InstaFailAccuracyGameController>().AsSingle().NonLazy();
+				Container.BindInterfacesTo<InstaFailAccuracyGameController>().AsSingle();
 			}
 		}
 	}
